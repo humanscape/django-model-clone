@@ -4,12 +4,11 @@ version = "0.1.0"
 description = "duplication of django model object"
 authors = ["humanscape-june <june.333@humanscape.io>"]
 license = "ISC"
+readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.6"
 Django = "3.1.8"
-setuptools = "^62.0.0"
-wheel = "^0.37.1"
 
 [tool.poetry.dev-dependencies]
 
