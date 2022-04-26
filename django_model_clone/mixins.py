@@ -40,7 +40,11 @@ class CloneMixin:
             if clone_object_set.original_object == model_object:
                 return clone_object_set.cloned_object
 
-        cloned_object = model_object.clone()
+        try:
+            cloned_object = model_object.clone()
+        except AttributeError:
+            # model_object에 clone method가 없는 경우 original_object를 반환
+            cloned_object = model_object
         ModelCloneUtil.clone_objects_set.append(CloneObjectSet(model_object, cloned_object))
         return cloned_object
 
