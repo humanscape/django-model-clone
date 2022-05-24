@@ -36,15 +36,19 @@ class CloneMixin:
             self.search_relation_field(related_field_str)
 
     def get_cloned_object(self, model_object):
-        for clone_object_set in ModelCloneUtil.clone_objects_set:
-            if clone_object_set.original_object == model_object:
-                return clone_object_set.cloned_object
+        cloned_object_set = next(
+            filter(
+                lambda x: x.original_object == model_object
+                or x.cloned_object  # Models that reference multiple models have errors in replicating replicated model objects
+                == model_object,  # to prevent the replicated model objects from being recognized as source model objects
+                ModelCloneUtil.clone_objects_set,
+            ),
+            None,
+        )
+        if cloned_object_set:
+            return cloned_object_set.cloned_object
 
-        try:
-            cloned_object = model_object.clone()
-        except AttributeError:
-            # model_object에 clone method가 없는 경우 original_object를 반환
-            cloned_object = model_object
+        cloned_object = model_object.clone()
         ModelCloneUtil.clone_objects_set.append(CloneObjectSet(model_object, cloned_object))
         return cloned_object
 
